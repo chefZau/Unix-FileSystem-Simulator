@@ -6,19 +6,19 @@ int main(int argc, char const *argv[]) {
     file p1 = file(filename1);
     file p2 = file(filename2);
 
-    char filename3[] = "/Users/zaumukcau/Downloads/testing_3307";
-    file p3 = file(filename3);
-    // cout << "p3: " << p3.name << endl;
-    // cout << "p3: " << p3.type << endl;
+//    char filename3[] = "/Users/zaumukcau/Downloads/testing_3307";
+//    file p3 = file(filename3);
+//    // cout << "p3: " << p3.name << endl;
+//    // cout << "p3: " << p3.type << endl;
+//
+//    p3.expand();
 
-    p3.expand();
-
-    // ofstream file(filename1);
-    // std::filebuf outfile;
-    // outfile.open(filename1, std::ios::out | std::ios::binary);
-    // std::fstream ofile(filename1, std::ios::out | std::ios::binary);
-    // p2.dump(ofile);
-    // ofile.close();
+    //     std::filebuf outfile;
+    //     outfile.open(filename1, std::ios::out | std::ios::binary);
+    //     std::fstream ofile(filename1, std::ios::out | std::ios::binary);
+    //
+    //     p2.dump(ofile);
+    //     ofile.close();
 
     cout << "comparing file 1 with file 2, 1 is true and 0 is false: " << p1.compare(p2) << endl;
 

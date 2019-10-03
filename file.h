@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <iterator>
+#define _POSIX_SOURCE
 
 #ifndef FILE_FILE_H
 #define FILE_FILE_H
@@ -34,18 +35,20 @@ protected:
     uid_t owner_id;
     gid_t group_id;
     blksize_t block_size;
-    string last_access_time;
-    string last_modify_time;
-    string last_status_change;
+
+    time_t last_access_time;
+    time_t last_modify_time;
+    time_t last_status_change;
+
     int errno_num;
     vector<file> children;
 
 public:
     file(char *filename);
 
-    ~file(){}
+    ~file() {}
 
-    void dump(std::fstream &ofile);
+    int dump(std::fstream &out_file);
 
     void rename(string new_name);
 
@@ -53,7 +56,7 @@ public:
 
     bool compare(file compare_object);
 
-    void expand();
+    int expand();
 
     string get_name();
 
@@ -73,11 +76,11 @@ public:
 
     blksize_t get_block_size();
 
-    string get_last_access_time();
+    time_t get_last_access_time();
 
-    string get_last_modify_time();
+    time_t get_last_modify_time();
 
-    string get_last_status_change();
+    time_t get_last_status_change();
 
     int get_errno_num();
 
@@ -89,3 +92,4 @@ private:
 
 
 #endif //FILE_FILE_H
+

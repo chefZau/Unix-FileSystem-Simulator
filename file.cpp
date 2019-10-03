@@ -1,10 +1,13 @@
 #include "file.h"
 
-file::file(char *filename)  {
+file::file(char *filename) {
     struct stat st;
     struct passwd *my_info;
     struct group *grp;
-    stat(filename, &st);
+
+    if (stat(filename, &st) != 0){
+        perror("stat() error");
+    }
 
     my_info = getpwuid(st.st_uid);
     grp = getgrgid(st.st_gid);
@@ -18,29 +21,31 @@ file::file(char *filename)  {
     this->group_id = st.st_gid;
     this->permission = permissions(filename);
     this->block_size = st.st_blksize;
-    this->last_access_time = ctime(&st.st_atime);
-    this->last_modify_time = ctime(&st.st_mtime);
-    this->last_status_change = ctime(&st.st_ctime);
+
+    this->last_access_time = st.st_atime;
+    this->last_modify_time = st.st_mtime;
+    this->last_status_change = st.st_ctime;
+
     this->errno_num = 0;
 }
 
-
-void file::dump(std::fstream &ofile) {
+int file::dump(std::fstream &out_file) {
 
     if (this->type != "regular file") {
-        errno = ENOENT;
+        errno = ENOTSUP;
         perror("dump(..) error");
-        return;
+        return errno;
     }
-    cout << this->name.c_str() << endl;
 
-    std::fstream ifile(this->name.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
-    size_t size = ifile.tellg();
+    std::fstream in_file(this->name.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
+    size_t size = in_file.tellg();
     char *buffer = new char[size];
-    ifile.seekg(0, std::ios::beg);
-    ifile.read(buffer, size);
-    ofile.write(buffer, size);
-    ifile.close();
+    in_file.seekg(0, std::ios::beg);
+    in_file.read(buffer, size);
+    out_file.write(buffer, size);
+    in_file.close();
+
+    return 0;
 }
 
 void file::rename(string new_name) {
@@ -50,7 +55,8 @@ void file::rename(string new_name) {
         cout << "File successfully moved" << endl;
     } else {
         errno = ENOENT;
-        cout << "Error renaming file" << endl;
+        cout << "Error renaming file" << " please include whole path." << endl;
+//        return errno;
     }
 }
 
@@ -63,7 +69,7 @@ void file::remove() {
         if (unlink(this->name.c_str()) != 0)
             perror("unlink() error");
         else {
-            cout << "ok remove it alreaady!" << endl;
+            cout << "ok remove it already!" << endl;
         }
     }
 }
@@ -95,11 +101,12 @@ bool file::compare(file compare_object) {
     return true;
 }
 
-void file::expand() {
+int file::expand() {
 
     if (this->type != "directory") {
         cout << "This is not a directory" << endl;
-        return;
+        errno = ENOENT;
+        return errno;
     }
 
     DIR *dir;
@@ -123,6 +130,7 @@ void file::expand() {
 
         closedir(dir);
     }
+    return 0;
 }
 
 string file::get_name() {
@@ -161,20 +169,20 @@ blksize_t file::get_block_size() {
     return this->block_size;
 }
 
-string file::get_last_access_time() {
+time_t file::get_last_access_time() {
     return this->last_access_time;
 }
 
-string file::get_last_modify_time() {
+time_t file::get_last_modify_time() {
     return this->last_modify_time;
+}
+
+time_t file::get_last_status_change() {
+    return this->last_status_change;
 }
 
 int file::get_errno_num() {
     return this->errno_num;
-}
-
-string file::get_last_status_change() {
-    return this->last_status_change;
 }
 
 string file::get_file_type(struct stat st) {
@@ -229,3 +237,4 @@ char *file::permissions(char *file) {
         return strerror(errno);
     }
 }
+
