@@ -17,20 +17,15 @@
 #include <algorithm>
 #include <cstdlib>
 #include <iterator>
-#define _POSIX_SOURCE
 
 #ifndef FILE_FILE_H
 #define FILE_FILE_H
 using namespace std;
 
-string get_file_type(struct stat st);
-
-char *permissions(char *file);
-
 class file {
 
 protected:
-    string name, owner_name, group_name, type, permission;
+    string name, owner_name, group_name, type, permission, path;
     off_t size;
     uid_t owner_id;
     gid_t group_id;
@@ -44,7 +39,7 @@ protected:
     vector<file> children;
 
 public:
-    file(char *filename);
+    file(char *pathname);
 
     ~file() {}
 
@@ -84,10 +79,19 @@ public:
 
     int get_errno_num();
 
+    vector<file> get_children();
+
+    string file_path();
+
+    void ls_helper();
+
 private:
+
     string get_file_type(struct stat st);
 
     char *permissions(char *file);
+
+    char * split_path(char *str);
 };
 
 

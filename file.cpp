@@ -1,25 +1,25 @@
 #include "file.h"
 
-file::file(char *filename) {
+file::file(char *pathname) {
     struct stat st;
     struct passwd *my_info;
     struct group *grp;
-
-    if (stat(filename, &st) != 0){
-        perror("stat() error");
+    errno = 0;
+    if (stat(pathname, &st) == -1){
+        perror("unable open file");
     }
 
     my_info = getpwuid(st.st_uid);
     grp = getgrgid(st.st_gid);
 
-    this->name = (string) filename;
+    this->name = (string) pathname;
     this->owner_name = my_info->pw_name;
     this->group_name = grp->gr_name;
     this->type = get_file_type(st);
     this->size = st.st_size;
     this->owner_id = st.st_uid;
     this->group_id = st.st_gid;
-    this->permission = permissions(filename);
+    this->permission = permissions(pathname);
     this->block_size = st.st_blksize;
 
     this->last_access_time = st.st_atime;
@@ -34,7 +34,6 @@ int file::dump(std::fstream &out_file) {
     if (this->type != "regular file") {
         errno = ENOTSUP;
         perror("dump(..) error");
-        return errno;
     }
 
     std::fstream in_file(this->name.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
@@ -54,9 +53,7 @@ void file::rename(string new_name) {
     if (result == 0) {
         cout << "File successfully moved" << endl;
     } else {
-        errno = ENOENT;
-        cout << "Error renaming file" << " please include whole path." << endl;
-//        return errno;
+        perror("rename() error");
     }
 }
 
@@ -105,7 +102,7 @@ int file::expand() {
 
     if (this->type != "directory") {
         cout << "This is not a directory" << endl;
-        errno = ENOENT;
+        errno = ENOTDIR;
         return errno;
     }
 
@@ -120,10 +117,7 @@ int file::expand() {
     } else {
         while ((entry = readdir(dir)) != NULL) {
             if (entry->d_name[0] != '.') {
-                strcpy(path, dirname);
-                strcat(path, "/");
-                strcat(path, entry->d_name);
-                this->children.emplace_back(file(path));
+                this->children.emplace_back(file(entry->d_name));
             }
         }
         cout << "the number of files in this folder is: " << this->children.size() << endl;
@@ -131,6 +125,10 @@ int file::expand() {
         closedir(dir);
     }
     return 0;
+}
+
+void file::ls_helper() {
+    cout << this->permission << " " << this->owner_name << " " << this->owner_name << " " << this->type << " " << this->name << endl;
 }
 
 string file::get_name() {
@@ -185,6 +183,10 @@ int file::get_errno_num() {
     return this->errno_num;
 }
 
+vector<file> file::get_children(){
+    return this->children;
+}
+
 string file::get_file_type(struct stat st) {
     string type;
     switch (st.st_mode & S_IFMT) {
@@ -236,5 +238,16 @@ char *file::permissions(char *file) {
     else {
         return strerror(errno);
     }
+}
+
+char *file::split_path(char *str) {
+    char *pch;
+    char *temp;
+
+    pch = strtok(str, "/");
+    while ((temp = strtok(NULL, "/")) != NULL) {
+        pch = temp;
+    }
+    return pch;
 }
 

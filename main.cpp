@@ -7,13 +7,13 @@ int main(int argc,  char *argv[]) {
      * 这个部分是 mycp 的 要声名两个参数
      * /Users/zaumukcau/Downloads/testing_3307/file1.txt /Users/zaumukcau/Downloads/file1.txt
      */
-    //    file source_file = file(argv[1]);
-    //    file dest_file = file(argv[2]);
-    //    std::filebuf outfile;
-    //    outfile.open(dest_file.get_name().c_str(), std::ios::out | std::ios::binary);
-    //    std::fstream out_file(dest_file.get_name().c_str(), std::ios::out | std::ios::binary);
-    //    source_file.dump(out_file);
-    //    out_file.close();
+//    file source_file = file(argv[1]);
+//    file dest_file = file(argv[2]);
+//    std::filebuf outfile;
+//    outfile.open(dest_file.get_name().c_str(), std::ios::out | std::ios::binary);
+//    std::fstream out_file(dest_file.get_name().c_str(), std::ios::out | std::ios::binary);
+//    source_file.dump(out_file);
+//    out_file.close();
 
 
     /**
@@ -48,13 +48,13 @@ int main(int argc,  char *argv[]) {
      *
      *  /Users/zaumukcau/Downloads/testing_3307/file1.txt /Users/zaumukcau/Downloads/file6.txt
      */
-    //    file compare_object1 = file(argv[1]);
-    //    file compare_object2 = file(argv[2]);
-    //    if (compare_object1.compare(compare_object2) == 1){
-    //        cout << "They are the same!" << endl;
-    //    } else {
-    //        cout << "They are not the same!" << endl;
-    //    }
+//        file compare_object1 = file(argv[1]);
+//        file compare_object2 = file(argv[2]);
+//        if (compare_object1.compare(compare_object2) == 1){
+//            cout << "They are the same!" << endl;
+//        } else {
+//            cout << "They are not the same!" << endl;
+//        }
 
     /**
      *  这个部分是 mycat
@@ -64,10 +64,7 @@ int main(int argc,  char *argv[]) {
      *      use dump function
      */
 
-
-
-
-    //    char filename1[] = "/Users/zaumukcau/Downloads/testing_3307/file1.txt";
+    //    char filename1[] = "/Users/zaumukcau/Downloads/testing_3307file1.txt";
     //    char filename2[] = "/Users/zaumukcau/Downloads/testing_3307/file2.txt";
     file p1 = file(argv[1]);
     file p2 = file(argv[2]);
@@ -76,10 +73,11 @@ int main(int argc,  char *argv[]) {
 
     char filename3[] = "/Users/zaumukcau/Downloads/testing_3307";
     file p3 = file(filename3);
-    // cout << "p3: " << p3.name << end®l;
+    // cout << "p3: " << p3.name << endl;
     // cout << "p3: " << p3.type << endl;
 
     p3.expand();
+
 
     //     std::filebuf outfile;
     //     outfile.open(filename1, std::ios::out | std::ios::binary);

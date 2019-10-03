@@ -3,4 +3,4 @@ project(file)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(file main.cpp file.cpp file.h)
+add_executable(file main.cpp file.cpp file.h mydiff.cpp myls.cpp mycat.cpp)

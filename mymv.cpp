@@ -2,6 +2,7 @@
 // Created by 周牧秋 on 2019/10/2.
 //
 #include "file.h"
+
 /**
  * mymv
  *      move and rename files around
@@ -17,21 +18,34 @@
  * @param argv
  * @return
  */
-int main( int argc, char *argv[] ){
+int main(int argc, char *argv[]) {
+//
+//        char cwd[256];
+//
+//        if (chdir("/tmp") != 0)
+//            perror("chdir() error()");
+//        else {
+//            if (getcwd(cwd, sizeof(cwd)) == NULL)
+//                perror("getcwd() error");
+//            else
+//                printf("current working directory is: %s\n", cwd);
+//        }
 
-    if ( argc < 3 ) {
-        printf("Two argument expected.\n");
-        exit(0);
-    }
-
+    /**
+    * 这个部分是 mymv 从一个location mv到另外一个location
+    * 两个argument
+    *
+    * /Users/zaumukcau/Downloads/testing_3307/file1.txt /Users/zaumukcau/Downloads/file6.txt
+    */
     file source_file = file(argv[1]);
     source_file.rename(argv[2]);
+
     int error_num = errno;
 
     if (error_num == EXDEV) {
         std::filebuf outfile;
-        outfile.open(dest_file.get_name().c_str(), std::ios::out | std::ios::binary);
-        std::fstream out_file(dest_file.get_name().c_str(), std::ios::out | std::ios::binary);
+        outfile.open(argv[2], std::ios::out | std::ios::binary);
+        std::fstream out_file(argv[2], std::ios::out | std::ios::binary);
         source_file.dump(out_file);
         out_file.close();
         source_file.remove();
