@@ -38,15 +38,6 @@ file::file(char *pathname) {
 }
 
 /**
- * Destructor of the class.
- * This destroys and frees up any resources attached to the
- * object the destructor was called on.
- */
-~
-
-file() {}
-
-/**
  * This function will take a file stream as a parameter and dump the contents
  * of the named file to that file stream.  This can be used to copy the file,
  * display its contents to the terminal, and so on.
