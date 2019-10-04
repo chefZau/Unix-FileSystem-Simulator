@@ -17,7 +17,6 @@
 #include <algorithm>
 #include <cstdlib>
 #include <iterator>
-
 #ifndef FILE_FILE_H
 #define FILE_FILE_H
 using namespace std;
@@ -41,7 +40,7 @@ protected:
 public:
     file(char *pathname);
 
-    ~file() {}
+    ~file(){}
 
     int dump(std::fstream &out_file);
 
@@ -93,7 +92,6 @@ private:
 
     char * split_path(char *str);
 };
-
 
 #endif //FILE_FILE_H
 
